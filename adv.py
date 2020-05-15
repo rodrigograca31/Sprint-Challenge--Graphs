@@ -13,8 +13,8 @@ world = World()
 # You may uncomment the smaller graphs for development and testing purposes.
 map_file = "maps/test_line.txt"
 map_file = "maps/test_cross.txt"
-# map_file = "maps/test_loop.txt"
-# map_file = "maps/test_loop_fork.txt"
+map_file = "maps/test_loop.txt"
+map_file = "maps/test_loop_fork.txt"
 map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
@@ -22,7 +22,7 @@ room_graph = literal_eval(open(map_file, "r").read())
 world.load_graph(room_graph)
 
 # Print an ASCII map
-# world.print_rooms()
+world.print_rooms()
 
 player = Player(world.starting_room)
 
@@ -69,7 +69,7 @@ while len(q) > 0:
     #     print(current_room.id)
     #     prev_room = room_path[-2]
 
-    print(room_path)
+    # print(room_path)
     if current_room not in visited:
         visited.add(current_room)
 
@@ -111,11 +111,11 @@ while len(q) > 0:
     #     print(room_path)
     # print(last_dir)
 
-print()
-print(traversal_path)
-print()
-print(my_graph)
-print()
+# print()
+# print(traversal_path)
+# print()
+# print(my_graph)
+# print()
 
 print("====================================")
 print("====================================")
@@ -171,6 +171,11 @@ def dft_recursive(starting_vertex, visited=set(), direction=None):
         traversal_path.append(direction)
         # print()
         visited.add(starting_vertex)
+
+        # directions = my_graph[starting_vertex]
+        # directions = list(directions)
+        # random.shuffle(directions)
+
         for next_vertex in my_graph[starting_vertex]:
             # print(next_vertex)
             # print(my_graph[starting_vertex][next_vertex])
@@ -178,6 +183,12 @@ def dft_recursive(starting_vertex, visited=set(), direction=None):
             dft_recursive(my_graph[starting_vertex]
                           [next_vertex], visited, next_vertex)
             # print("aaaaa")
+
+        # print(len(q), visited)
+        if len(visited) >= len(room_graph):
+            # print("aaaaaaa")
+            return
+
         if direction == "n":
             # print("s")
             traversal_path.append("s")
@@ -192,14 +203,15 @@ def dft_recursive(starting_vertex, visited=set(), direction=None):
             traversal_path.append("e")
 
 
-dft_recursive(0, set(), "n")
-traversal_path.pop()
-traversal_path = traversal_path[1:]
+dft_recursive(0, set())
+# traversal_path.pop()
+traversal_path = traversal_path[1:]  # removes None
 print()
 
 for move in traversal_path:
     # print(move)
     player.travel(move)
+    # print(player.current_room.id)
     visited_rooms.add(player.current_room)
 
 if len(visited_rooms) == len(room_graph):
